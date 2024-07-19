@@ -1,5 +1,5 @@
 import {Alert, Image, ScrollView, StyleSheet, Text, View} from 'react-native';
-import React, {useContext, useState} from 'react';
+import React, {useContext, useMemo, useRef, useState} from 'react';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {HomeStackParamList} from '@navigation/HomeStackNavigator';
 import {productService} from '@services/product';
@@ -17,9 +17,9 @@ export const DetailsScreen: React.FC<Props> = ({route, navigation}) => {
 
   const product = route.params.product;
 
-  const bottomSheetModalRef = React.useRef<BottomSheetModal>(null);
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
-  const snapPoints = React.useMemo(() => ['50%'], []);
+  const snapPoints = useMemo(() => ['50%'], []);
 
   const handlePresentModalPress = () => {
     bottomSheetModalRef.current?.present();
@@ -86,7 +86,6 @@ export const DetailsScreen: React.FC<Props> = ({route, navigation}) => {
           <OutlinedButtonComponent
             text="Eliminar"
             onPress={handlePresentModalPress}
-            // onPress={handleDelete}
             isLoading={isDeleting}>
             <Icon name="trash" size={18} color="darkslategrey" />
           </OutlinedButtonComponent>
@@ -146,7 +145,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 18,
-    fontWeight: 'semibold',
+    fontWeight: 'bold',
     color: 'darkslategrey',
     marginTop: 16,
     marginBottom: 8,

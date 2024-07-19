@@ -9,7 +9,7 @@ describe('HeaderComponent', () => {
   });
 
   afterEach(() => {
-    jest.clearAllTimers();
+    jest.useRealTimers();
   });
 
   it('renders correctly', () => {

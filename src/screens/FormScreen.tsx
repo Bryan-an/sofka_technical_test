@@ -19,7 +19,8 @@ import DatePicker from 'react-native-date-picker';
 import {productService} from '@services/product';
 import {FilledButtonComponent} from '@components/FilledButtonComponent';
 import {OutlinedButtonComponent} from '@components/OutlinedButtonComponent';
-import {ProductContext} from 'context/product';
+import {ProductContext} from '@context/product';
+import {DateUtils} from '@utils/date';
 
 interface Props extends NativeStackScreenProps<HomeStackParamList, 'Form'> {}
 
@@ -40,18 +41,14 @@ const validationSchema = Yup.object().shape({
   date_release: Yup.date()
     .required('Este campo es obligatorio')
     .min(
-      new Date(new Date().setHours(0, 0, 0, 0)),
+      new DateUtils().zeroDate,
       'La fecha de liberación debe ser mayor o igual a la fecha actual',
     ),
   date_revision: Yup.date()
     .required('Este campo es obligatorio')
     .when(['$date_release'], ([date_release], schema) =>
       schema.min(
-        new Date(
-          new Date(
-            new Date(date_release).setFullYear(date_release.getFullYear() + 1),
-          ).setHours(0, 0, 0, 0),
-        ),
+        new DateUtils(date_release).plusYears(1).zeroDate,
         'La fecha de revisión debe ser exactamente un año posterior a la fecha de liberación',
       ),
     ),
@@ -68,6 +65,7 @@ export const FormScreen: React.FC<Props> = ({navigation, route}) => {
 
   const initialValues = useMemo(() => {
     const product = route.params?.product;
+    console.log('here');
 
     if (product) {
       return {
@@ -75,8 +73,8 @@ export const FormScreen: React.FC<Props> = ({navigation, route}) => {
         name: product.name,
         description: product.description,
         logo: product.logo,
-        date_release: new Date(product.date_release),
-        date_revision: new Date(product.date_revision),
+        date_release: new DateUtils(product.date_release).zeroDate,
+        date_revision: new DateUtils(product.date_revision).zeroDate,
       };
     } else {
       return {
@@ -84,10 +82,8 @@ export const FormScreen: React.FC<Props> = ({navigation, route}) => {
         name: '',
         description: '',
         logo: '',
-        date_release: new Date(),
-        date_revision: new Date(
-          new Date().setFullYear(new Date().getFullYear() + 1),
-        ),
+        date_release: new DateUtils().zeroDate,
+        date_revision: new DateUtils().plusYears(1).zeroDate,
       };
     }
   }, [route.params?.product]);
@@ -271,15 +267,11 @@ export const FormScreen: React.FC<Props> = ({navigation, route}) => {
                   modal
                   open={isReleaseDatePickerOpen}
                   mode="date"
-                  minimumDate={new Date(new Date().setHours(0, 0, 0, 0))}
+                  minimumDate={new DateUtils().zeroDate}
                   date={values.date_release}
                   onConfirm={date => {
                     setIsReleaseDatePickerOpen(false);
-
-                    setFieldValue(
-                      'date_release',
-                      new Date(date.setHours(0, 0, 0, 0)),
-                    );
+                    setFieldValue('date_release', new DateUtils(date).zeroDate);
                   }}
                   onCancel={() => setIsReleaseDatePickerOpen(false)}
                 />
@@ -314,13 +306,7 @@ export const FormScreen: React.FC<Props> = ({navigation, route}) => {
                   open={isRevisionDatePickerOpen}
                   mode="date"
                   minimumDate={
-                    new Date(
-                      new Date(
-                        new Date(values.date_release).setFullYear(
-                          values.date_release.getFullYear() + 1,
-                        ),
-                      ).setHours(0, 0, 0, 0),
-                    )
+                    new DateUtils(values.date_release).plusYears(1).zeroDate
                   }
                   date={values.date_revision}
                   onConfirm={date => {
@@ -328,7 +314,7 @@ export const FormScreen: React.FC<Props> = ({navigation, route}) => {
 
                     setFieldValue(
                       'date_revision',
-                      new Date(date.setHours(0, 0, 0, 0)),
+                      new DateUtils(date).zeroDate,
                     );
                   }}
                   onCancel={() => setIsRevisionDatePickerOpen(false)}

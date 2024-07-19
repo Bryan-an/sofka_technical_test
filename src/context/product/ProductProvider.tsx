@@ -58,7 +58,7 @@ const fakeProducts: ProductModel.Response.GetAll.Datum[] = [
 type Props = React.PropsWithChildren<{}>;
 
 export const ProductProvider: React.FC<Props> = ({children}) => {
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isProductsLoading, setIsProductsLoading] = useState<boolean>(true);
 
   const [products, setProducts] =
     useState<ProductModel.Response.GetAll.Datum[]>(fakeProducts);
@@ -70,7 +70,7 @@ export const ProductProvider: React.FC<Props> = ({children}) => {
   }, []);
 
   const fetchProducts = () => {
-    setIsLoading(true);
+    setIsProductsLoading(true);
 
     productService
       .getAll()
@@ -84,7 +84,7 @@ export const ProductProvider: React.FC<Props> = ({children}) => {
           error.message ?? 'Ocurrió un error al obtener los productos',
         );
       })
-      .finally(() => setIsLoading(false));
+      .finally(() => setIsProductsLoading(false));
   };
 
   const searchProducts = (text: string) => {
@@ -99,7 +99,7 @@ export const ProductProvider: React.FC<Props> = ({children}) => {
     <ProductContext.Provider
       value={{
         products,
-        isProductsLoading: isLoading,
+        isProductsLoading,
         searchProducts,
         fetchProducts,
       }}>
