@@ -7,12 +7,24 @@ jest.mock('react-native-safe-area-context', () => mockSafeAreaContext);
 
 jest.mock('@gorhom/bottom-sheet', () => {
   const reactNative = jest.requireActual('react-native');
+  const React = require('react');
   const {View} = reactNative;
+
+  class Modal extends React.Component {
+    present = jest.fn();
+
+    dismiss = jest.fn();
+
+    render() {
+      return React.createElement('View', this.props, this.props.children);
+    }
+  }
 
   return {
     __esModule: true,
     default: View,
-    BottomSheetModal: View,
+    BottomSheetModal: Modal,
+    BottomSheetView: View,
     BottomSheetModalProvider: View,
     useBottomSheetModal: () => ({
       present: () => {},
@@ -30,3 +42,18 @@ jest.mock('react-native-reanimated', () => {
 });
 
 jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper');
+
+jest.mock('react-native-date-picker', () => {
+  const React = require('react');
+
+  class DatePicker extends React.Component {
+    render() {
+      return React.createElement('View', this.props, this.props.children);
+    }
+  }
+
+  return {
+    __esModule: true,
+    default: DatePicker,
+  };
+});

@@ -65,7 +65,6 @@ export const FormScreen: React.FC<Props> = ({navigation, route}) => {
 
   const initialValues = useMemo(() => {
     const product = route.params?.product;
-    console.log('here');
 
     if (product) {
       return {
@@ -92,7 +91,9 @@ export const FormScreen: React.FC<Props> = ({navigation, route}) => {
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.screen}>
-      <Text style={styles.title}>Formulario de Registro</Text>
+      <Text style={styles.title}>
+        Formulario de {route.params?.product ? 'Edición' : 'Registro'}
+      </Text>
 
       <Formik
         initialValues={initialValues}
@@ -201,7 +202,7 @@ export const FormScreen: React.FC<Props> = ({navigation, route}) => {
                       ? {borderColor: 'orangered'}
                       : undefined,
                   ]}
-                  placeholder="123ABC"
+                  placeholder="TARJETA DE CRÉDITO"
                 />
                 {errors.name && touched.name ? (
                   <Text style={styles.error}>{errors.name}</Text>
@@ -220,7 +221,7 @@ export const FormScreen: React.FC<Props> = ({navigation, route}) => {
                       ? {borderColor: 'orangered'}
                       : undefined,
                   ]}
-                  placeholder="123ABC"
+                  placeholder="TARJETA VISA PREMIUM"
                 />
                 {errors.description && touched.description ? (
                   <Text style={styles.error}>{errors.description}</Text>
@@ -239,7 +240,7 @@ export const FormScreen: React.FC<Props> = ({navigation, route}) => {
                       ? {borderColor: 'orangered'}
                       : undefined,
                   ]}
-                  placeholder="123ABC"
+                  placeholder="https://www.visa.com.ec/visa-premium.jpg"
                 />
                 {errors.logo && touched.logo ? (
                   <Text style={styles.error}>{errors.logo}</Text>

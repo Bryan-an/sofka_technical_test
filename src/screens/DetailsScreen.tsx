@@ -57,6 +57,7 @@ export const DetailsScreen: React.FC<Props> = ({route, navigation}) => {
           <Image
             source={{uri: product.logo}}
             style={{width: 'auto', height: 200, resizeMode: 'contain'}}
+            testID="product-logo"
           />
           <Text style={styles.idText}>ID: {product.id}</Text>
           <Text style={styles.subtitle}>Información adicional</Text>
